@@ -1,1 +1,1 @@
-# NLP_AI_news-sentiment
+# NLP_AI_news_sentiment
