@@ -1,0 +1,49 @@
+{
+  "judge": "LLM (Claude), blind to which model produced each label",
+  "articles_scored": 200,
+  "articles_in_sheet": 200,
+  "bertopic": {
+    "correct_and_specific": 0.66,
+    "ci_specific": [
+      0.595,
+      0.725
+    ],
+    "correct": 0.855,
+    "ci_correct": [
+      0.805,
+      0.9
+    ],
+    "wrong": 0.145
+  },
+  "kmeans": {
+    "correct_and_specific": 0.445,
+    "ci_specific": [
+      0.375,
+      0.515
+    ],
+    "correct": 0.865,
+    "ci_correct": [
+      0.815,
+      0.91
+    ],
+    "wrong": 0.135
+  },
+  "specific_difference_bertopic_minus_kmeans": {
+    "value": 0.215,
+    "ci": [
+      0.135,
+      0.3
+    ]
+  },
+  "preference": {
+    "bertopic": 98,
+    "kmeans": 34,
+    "tie": 68,
+    "sign_test_p": 2.23e-08
+  },
+  "kmeans_generic_bucket": {
+    "articles": 81,
+    "bertopic_specific": 0.5802,
+    "kmeans_specific": 0.3951
+  }
+}

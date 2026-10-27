@@ -102,6 +102,21 @@ The full list is in `results/bertopic_v2/industry_summary_bertopic.csv`.
 
 A further 36.7% of the general bucket became BERTopic outliers. This count is conservative: an article that moved into another technology sector, such as Consumer AI Apps or Semiconductors, is not counted as moved.
 
+**Blind label check** (`scripts/make_label_check.py`, `scripts/score_label_check.py`). The check used 200 random articles that both models assign to a sector. Each article was shown with its two labels as A and B, in random order. Each label was judged *correct and specific*, *correct but too general*, or *wrong*, and the better label was chosen.
+
+**The judge was an LLM (Claude), not a human annotator.** It saw only the title, the domain and the first 500 characters of the cleaned article. It did not know which model produced which label.
+
+| | BERTopic sector | K-Means industry |
+|---|---|---|
+| Correct and specific | **66.0%** [59.5, 72.5] | 44.5% [37.5, 51.5] |
+| Correct (specific or too general) | 85.5% [80.5, 90.0] | 86.5% [81.5, 91.0] |
+| Wrong | 14.5% | 13.5% |
+| Preferred head-to-head | **98** | 34 |
+
+The head-to-head row excludes 68 ties; a sign test gives p = 2e-8.
+
+BERTopic's label is specific 21.5 points more often (paired 95% CI 13.5 to 30.0), but it is not right more often: both models are wrong on about 14% of articles. Most of K-Means's *too general* labels (49 of 59) are its "Software / AI Platforms" label, and most of BERTopic's wrong labels are Government & Regulation (9 of 29). The check covers only articles that both models label. BERTopic leaves 29.8% of articles without a sector, while K-Means labels 95% of them. Scores: `results/label_check/summary.json`.
+
 Reproduce (the instructor-provided corpus is not included in this repository; place it under `data/`):
 
 ```bash
@@ -109,6 +124,8 @@ pip install -r requirements-bertopic.txt
 python scripts/bertopic_topics.py --source clean --out results/bertopic          # first run, full cleaned text
 python scripts/bertopic_topics.py --source hybrid --reduce-to 40,14 --out results/bertopic_v2
 python scripts/map_industries.py
+python scripts/make_label_check.py    # writes the blind sheet to data/labeling/
+python scripts/score_label_check.py --judge "LLM (Claude), blind to which model produced each label"
 ```
 
 A full run takes about 7–13 minutes on an Apple M-series laptop with MPS. Embeddings are cached, so later runs are faster.
@@ -218,12 +235,15 @@ python scripts/sector_sentiment.py
 │   ├── bertopic_topics.py          # Stage 3b: BERTopic + coherence comparison with K-Means
 │   ├── map_industries.py           # Stage 3b: topic -> sector mapping and summary
 │   ├── sentiment_baselines.py      # Stage 5: baselines, per-class scores, bootstrap CIs
-│   └── sector_sentiment.py         # Stage 6b: sentiment by BERTopic sector and year
+│   ├── sector_sentiment.py         # Stage 6b: sentiment by BERTopic sector and year
+│   ├── make_label_check.py         # blind sheet: BERTopic vs K-Means industry labels
+│   └── score_label_check.py        # scores the filled-in sheet
 ├── results/
 │   ├── bertopic/                   # first run on full cleaned text (site-template topics)
 │   ├── bertopic_v2/                # final run: metrics, 40-topic table, sector map and summary
 │   ├── sentiment_eval/             # baseline comparison, per-class scores, confusion matrix
-│   └── sector_sentiment/           # sector and year sentiment tables
+│   ├── sector_sentiment/           # sector and year sentiment tables
+│   └── label_check/                # blind label check scores
 ├── requirements-bertopic.txt
 └── README.md
 ```
@@ -267,6 +287,7 @@ python -m spacy download en_core_web_sm
 - In Stage 3b, 29.8% of articles remain BERTopic outliers and receive no sector. The sector shares describe the other 66.8% of articles.
 - The `annotator` and `notes` columns of the labeled set are empty, so it is not known how often the review changed a GPT pre-label.
 - All 2,000 labeled sentences have the highest priority score (4), so they carry more information than the average of the 596,714 sentences the model is applied to. The test score may therefore overstate accuracy on the full set.
+- The Stage 3b label check was judged by an LLM, not by people. A human spot-check of the same sheet would show how far the two agree.
 - Stage 6b compares 26 sectors and 20 year-to-year changes without correcting for multiple comparisons.
 - Document-level topic assignments are not published, because they contain URLs and titles from the instructor-provided corpus. Only aggregate tables are included.
 - The corpus is limited to English-language articles and may not reflect non-Anglophone AI discourse.
