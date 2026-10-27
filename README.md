@@ -135,11 +135,73 @@ A `roberta-base` model was fine-tuned for sequence classification using the Hugg
 | Macro Precision | 0.762 |
 | Macro Recall | 0.770 |
 
+**Evaluation in context** (`scripts/sentiment_baselines.py`). The split was rebuilt exactly as in the notebook. The fine-tuned weights were not kept, so RoBERTa's test predictions are read from the saved inference output; they reproduce the scores above exactly. All models are scored on the same 300 test sentences (174 positive, 78 uncertain/mixed, 48 negative). Brackets are 95% bootstrap intervals.
+
+| Model | Accuracy | Macro F1 |
+|---|---|---|
+| Majority class (always *positive*) | 58.0% | 0.245 |
+| Off-the-shelf sentiment model, no fine-tuning (`cardiffnlp/twitter-roberta-base-sentiment-latest`) | 63.3% [57.7, 68.7] | 0.613 [0.550, 0.673] |
+| TF-IDF + logistic regression (C and class weights tuned on validation) | 74.7% [69.7, 79.3] | 0.697 [0.639, 0.753] |
+| **Fine-tuned RoBERTa-base** | **82.3% [78.3, 86.7]** | **0.764 [0.709, 0.818]** |
+
+Compared with TF-IDF + logistic regression, the fine-tuned model gains 7.7 points of accuracy (paired 95% CI 2.0 to 13.3). Its macro F1 gain of 0.067 has a CI of −0.003 to 0.135, so it is not significant on 300 sentences. The off-the-shelf model is 19 points behind. Its task is general sentiment, not AI impact, and it labels many positive sentences as neutral: positive recall is 62%.
+
+Per class, RoBERTa reaches F1 0.929 on *positive*, 0.718 on *negative* and 0.644 on *uncertain/mixed*. Most errors fall between *uncertain/mixed* and *negative*: 18 of the 78 uncertain/mixed test sentences were predicted negative. Positive and negative are almost never confused (1 of 222 sentences). Files: `results/sentiment_eval/`.
+
 The trained model was applied to all 596,714 filtered sentences, producing probability scores for each class. Results were aggregated at the document level, topic level, and entity level, with monthly time-series outputs for trend analysis.
 
 ### Stage 6 — Visualization (`06_Visualization.ipynb`)
 
 Sentiment trends were visualized across macro-topics, individual topics, top-mentioned companies, and AI technology categories over time.
+
+### Stage 6b — Sentiment by BERTopic Sector (`scripts/sector_sentiment.py`)
+
+The Stage 5 sentence predictions were joined to the Stage 3b sectors. Each article's score is the mean, over its AI-relevant sentences, of P(positive) − P(negative), so it runs from −1 to +1. Each sector's score is the mean article score, with a 95% bootstrap interval over articles. The 2,000 hand-labelled sentences were left out. This uses 561,781 sentences from 95,410 articles; the 63,772 articles that have a sector are summarised below.
+
+| Sector | Articles | Net sentiment [95% CI] |
+|---|---|---|
+| Legal Services | 223 | −0.48 [−0.54, −0.43] |
+| Elections & Misinformation | 1,916 | −0.24 [−0.26, −0.22] |
+| Defense & Military | 231 | −0.22 [−0.28, −0.17] |
+| AI Labs & Leadership | 3,667 | −0.11 [−0.13, −0.10] |
+| *All sectors* | *63,772* | *+0.43* |
+| Data Science & Analytics | 1,237 | +0.69 [+0.67, +0.71] |
+| Enterprise Software & Security | 11,181 | +0.69 [+0.69, +0.70] |
+| Retail & Marketing | 1,076 | +0.75 [+0.72, +0.77] |
+| Creative & Video Tools | 953 | +0.86 [+0.84, +0.87] |
+
+All 26 sectors are listed in `results/sector_sentiment/sector_sentiment.csv`.
+
+**The K-Means general label hid opposite views.** The 40,507 articles that K-Means labelled "Software / AI Platforms" average +0.29. Split by BERTopic sector, they range widely:
+
+| Sector within the general label | Articles | Net sentiment |
+|---|---|---|
+| Legal Services | 185 | −0.48 |
+| Elections & Misinformation | 966 | −0.25 |
+| Healthcare | 1,011 | +0.52 |
+| Data Science & Analytics | 1,003 | +0.77 |
+
+The full breakdown is in `results/sector_sentiment/kmeans_generic_bucket_by_sector.csv`.
+
+**Press releases.** Press releases are written to be positive, and sectors with more press-release articles do score higher (Spearman 0.75 across sectors). However, removing the 7.8% of articles that come from press-release wires barely changes the ranking: the Spearman correlation between the two rankings is 0.99. The ranking is therefore not only an effect of press releases. Creative & Video Tools contains many vendor landing pages (heygen.com), so its score partly reflects marketing copy.
+
+**Change from 2023 to 2025.** This covers sectors with at least 100 articles in both years. 13 of the 20 intervals exclude zero; they are not corrected for multiple comparisons. The largest changes:
+
+| Sector | Change [95% CI] |
+|---|---|
+| Energy & Climate | −0.17 [−0.23, −0.11] |
+| Music | −0.16 [−0.25, −0.08] |
+| China & AI Geopolitics | −0.13 [−0.19, −0.07] |
+| Creative & Video Tools | +0.14 [+0.08, +0.21] |
+| Film, TV & Gaming | +0.15 [+0.07, +0.23] |
+| Big Tech Platforms | +0.17 [+0.13, +0.21] |
+
+Creative & Video Tools grew from 148 to 586 articles over those years, so its rise may reflect a different mix of sources. Files: `results/sector_sentiment/`.
+
+```bash
+python scripts/sentiment_baselines.py     # needs data/sent_sentence.parquet (Stage 5 output)
+python scripts/sector_sentiment.py
+```
 
 ---
 
@@ -154,10 +216,14 @@ Sentiment trends were visualized across macro-topics, individual topics, top-men
 ├── NLP_Final_Project_06_Visualization.ipynb
 ├── scripts/
 │   ├── bertopic_topics.py          # Stage 3b: BERTopic + coherence comparison with K-Means
-│   └── map_industries.py           # Stage 3b: topic -> sector mapping and summary
+│   ├── map_industries.py           # Stage 3b: topic -> sector mapping and summary
+│   ├── sentiment_baselines.py      # Stage 5: baselines, per-class scores, bootstrap CIs
+│   └── sector_sentiment.py         # Stage 6b: sentiment by BERTopic sector and year
 ├── results/
 │   ├── bertopic/                   # first run on full cleaned text (site-template topics)
-│   └── bertopic_v2/                # final run: metrics, 40-topic table, sector map and summary
+│   ├── bertopic_v2/                # final run: metrics, 40-topic table, sector map and summary
+│   ├── sentiment_eval/             # baseline comparison, per-class scores, confusion matrix
+│   └── sector_sentiment/           # sector and year sentiment tables
 ├── requirements-bertopic.txt
 └── README.md
 ```
@@ -199,5 +265,8 @@ python -m spacy download en_core_web_sm
 - Organization normalization is rule-based and may introduce errors for ambiguous entity names.
 - Topic clusters were assigned labels through manual inspection, introducing subjectivity into the topic taxonomy. This also applies to the BERTopic sector map in Stage 3b, which records the evidence for each label so it can be checked.
 - In Stage 3b, 29.8% of articles remain BERTopic outliers and receive no sector. The sector shares describe the other 66.8% of articles.
+- The `annotator` and `notes` columns of the labeled set are empty, so it is not known how often the review changed a GPT pre-label.
+- All 2,000 labeled sentences have the highest priority score (4), so they carry more information than the average of the 596,714 sentences the model is applied to. The test score may therefore overstate accuracy on the full set.
+- Stage 6b compares 26 sectors and 20 year-to-year changes without correcting for multiple comparisons.
 - Document-level topic assignments are not published, because they contain URLs and titles from the instructor-provided corpus. Only aggregate tables are included.
 - The corpus is limited to English-language articles and may not reflect non-Anglophone AI discourse.

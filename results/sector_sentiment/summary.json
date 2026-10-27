@@ -1,0 +1,165 @@
+{
+  "sentences_used": 561781,
+  "articles": 95410,
+  "articles_with_sector": 63772,
+  "overall_net_sentiment": 0.4344,
+  "most_negative": [
+    {
+      "sector": "Legal Services",
+      "net_sentiment": -0.4841,
+      "ci_low": -0.5397,
+      "ci_high": -0.4291,
+      "articles": 223
+    },
+    {
+      "sector": "Elections & Misinformation",
+      "net_sentiment": -0.2362,
+      "ci_low": -0.2591,
+      "ci_high": -0.2153,
+      "articles": 1916
+    },
+    {
+      "sector": "Defense & Military",
+      "net_sentiment": -0.2208,
+      "ci_low": -0.2793,
+      "ci_high": -0.1655,
+      "articles": 231
+    },
+    {
+      "sector": "AI Labs & Leadership",
+      "net_sentiment": -0.1147,
+      "ci_low": -0.1324,
+      "ci_high": -0.0963,
+      "articles": 3667
+    }
+  ],
+  "most_positive": [
+    {
+      "sector": "Data Science & Analytics",
+      "net_sentiment": 0.6903,
+      "ci_low": 0.6655,
+      "ci_high": 0.7145,
+      "articles": 1237
+    },
+    {
+      "sector": "Enterprise Software & Security",
+      "net_sentiment": 0.6931,
+      "ci_low": 0.6858,
+      "ci_high": 0.7006,
+      "articles": 11181
+    },
+    {
+      "sector": "Retail & Marketing",
+      "net_sentiment": 0.7469,
+      "ci_low": 0.7242,
+      "ci_high": 0.769,
+      "articles": 1076
+    },
+    {
+      "sector": "Creative & Video Tools",
+      "net_sentiment": 0.8552,
+      "ci_low": 0.8365,
+      "ci_high": 0.8736,
+      "articles": 953
+    }
+  ],
+  "press_release": {
+    "share_of_articles": 0.0779,
+    "spearman_sector_net_vs_press_share": 0.753,
+    "spearman_rank_with_vs_without_press": 0.991
+  },
+  "change_2023_to_2025_ci_excludes_zero": [
+    {
+      "sector": "Energy & Climate",
+      "change": -0.1693,
+      "ci_low": -0.2344,
+      "ci_high": -0.1066
+    },
+    {
+      "sector": "Music",
+      "change": -0.1615,
+      "ci_low": -0.2536,
+      "ci_high": -0.0774
+    },
+    {
+      "sector": "China & AI Geopolitics",
+      "change": -0.1301,
+      "ci_low": -0.1875,
+      "ci_high": -0.0698
+    },
+    {
+      "sector": "Retail & Marketing",
+      "change": -0.0821,
+      "ci_low": -0.1446,
+      "ci_high": -0.0209
+    },
+    {
+      "sector": "AI Labs & Leadership",
+      "change": -0.051,
+      "ci_low": -0.097,
+      "ci_high": -0.0047
+    },
+    {
+      "sector": "Enterprise Software & Security",
+      "change": -0.0279,
+      "ci_low": -0.0472,
+      "ci_high": -0.0083
+    },
+    {
+      "sector": "Government & Regulation",
+      "change": 0.0488,
+      "ci_low": 0.0166,
+      "ci_high": 0.0807
+    },
+    {
+      "sector": "Education",
+      "change": 0.0835,
+      "ci_low": 0.032,
+      "ci_high": 0.1342
+    },
+    {
+      "sector": "Emerging Markets & Public Sector",
+      "change": 0.0901,
+      "ci_low": 0.0471,
+      "ci_high": 0.1332
+    },
+    {
+      "sector": "Consumer Electronics",
+      "change": 0.1067,
+      "ci_low": 0.0493,
+      "ci_high": 0.166
+    },
+    {
+      "sector": "Creative & Video Tools",
+      "change": 0.1418,
+      "ci_low": 0.0797,
+      "ci_high": 0.2131
+    },
+    {
+      "sector": "Film, TV & Gaming",
+      "change": 0.1542,
+      "ci_low": 0.0686,
+      "ci_high": 0.2345
+    },
+    {
+      "sector": "Big Tech Platforms",
+      "change": 0.1725,
+      "ci_low": 0.1344,
+      "ci_high": 0.2104
+    }
+  ],
+  "kmeans_generic_bucket": {
+    "articles": 40507,
+    "net_sentiment": 0.2879,
+    "sector_range_within_bucket": [
+      {
+        "sector": "Legal Services",
+        "net_sentiment": -0.4841
+      },
+      {
+        "sector": "Data Science & Analytics",
+        "net_sentiment": 0.7712
+      }
+    ]
+  }
+}

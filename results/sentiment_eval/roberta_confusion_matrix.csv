@@ -1,0 +1,4 @@
+,pred_negative,pred_uncertain_mixed,pred_positive
+true_negative,37,10,1
+true_uncertain_mixed,18,47,13
+true_positive,0,11,163

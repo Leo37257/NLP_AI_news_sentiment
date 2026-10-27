@@ -1,0 +1,94 @@
+{
+  "test_sentences": 300,
+  "train_sentences": 1400,
+  "val_sentences": 300,
+  "test_class_counts": {
+    "negative": 48,
+    "uncertain_mixed": 78,
+    "positive": 174
+  },
+  "models": {
+    "roberta_finetuned": {
+      "accuracy": 0.8233,
+      "accuracy_ci": [
+        0.7833,
+        0.8667
+      ],
+      "macro_f1": 0.7637,
+      "macro_f1_ci": [
+        0.7086,
+        0.818
+      ]
+    },
+    "majority_class": {
+      "accuracy": 0.58,
+      "accuracy_ci": [
+        0.5233,
+        0.6367
+      ],
+      "macro_f1": 0.2447,
+      "macro_f1_ci": [
+        0.229,
+        0.2585
+      ]
+    },
+    "tfidf_logreg": {
+      "accuracy": 0.7467,
+      "accuracy_ci": [
+        0.6967,
+        0.7933
+      ],
+      "macro_f1": 0.6967,
+      "macro_f1_ci": [
+        0.6385,
+        0.7527
+      ]
+    },
+    "off_the_shelf_sentiment": {
+      "accuracy": 0.6333,
+      "accuracy_ci": [
+        0.5767,
+        0.6867
+      ],
+      "macro_f1": 0.6128,
+      "macro_f1_ci": [
+        0.5501,
+        0.6732
+      ]
+    }
+  },
+  "tfidf_logreg_config": {
+    "C": 0.3,
+    "class_weight": "balanced",
+    "val_macro_f1": 0.6856
+  },
+  "off_the_shelf_model": "cardiffnlp/twitter-roberta-base-sentiment-latest",
+  "macro_f1_gain_vs_tfidf_logreg": {
+    "value": 0.067,
+    "ci": [
+      -0.003,
+      0.1347
+    ]
+  },
+  "accuracy_gain_vs_tfidf_logreg": {
+    "value": 0.0767,
+    "ci": [
+      0.02,
+      0.1333
+    ]
+  },
+  "macro_f1_gain_vs_off_the_shelf_sentiment": {
+    "value": 0.1509,
+    "ci": [
+      0.0846,
+      0.2193
+    ]
+  },
+  "accuracy_gain_vs_off_the_shelf_sentiment": {
+    "value": 0.19,
+    "ci": [
+      0.13,
+      0.25
+    ]
+  }
+}
