@@ -1,0 +1,39 @@
+{
+  "documents": 115006,
+  "source": "clean",
+  "embedder": "all-MiniLM-L6-v2",
+  "min_cluster_size": 150,
+  "bertopic": {
+    "n_topics": 136,
+    "outlier_share_before_reduction": 0.3873,
+    "outlier_share_after_reduction": 0.2557,
+    "n_topics_scored": 136,
+    "diversity": 0.6077,
+    "c_npmi": 0.2414,
+    "c_v": 0.7288
+  },
+  "kmeans_baseline": {
+    "n_topics": 14,
+    "n_topics_scored": 14,
+    "diversity": 0.8739,
+    "c_npmi": 0.1925,
+    "c_v": 0.7343
+  },
+  "bertopic_reduced_to_40": {
+    "n_topics": 40,
+    "outlier_share": 0.2557,
+    "n_topics_scored": 40,
+    "diversity": 0.7372,
+    "c_npmi": 0.2398,
+    "c_v": 0.7226
+  },
+  "bertopic_reduced_to_14": {
+    "n_topics": 14,
+    "outlier_share": 0.2557,
+    "n_topics_scored": 14,
+    "diversity": 0.7794,
+    "c_npmi": 0.2771,
+    "c_v": 0.7309
+  },
+  "runtime_seconds": 388
+}

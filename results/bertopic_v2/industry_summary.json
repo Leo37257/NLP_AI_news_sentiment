@@ -1,0 +1,17 @@
+{
+  "documents": 95467,
+  "content_topics": 34,
+  "noise_topics": 6,
+  "industries": 26,
+  "share_assigned_to_industry": 0.6684,
+  "share_noise_topics": 0.0337,
+  "share_outliers": 0.2979,
+  "original_generic_bucket": {
+    "label": "Software / AI Platforms",
+    "docs": 40536,
+    "moved_to_a_non_tech_sector": 12424,
+    "share_moved": 0.3065,
+    "share_outlier": 0.3673
+  },
+  "original_industries_in_these_docs": 13
+}
